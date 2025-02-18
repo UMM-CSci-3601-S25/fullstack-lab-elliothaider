@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Todo } from './todo';
+import { TodoCategory } from './todo';
 
 
 @Injectable({
@@ -20,21 +21,16 @@ export class TodoService {
   constructor(private httpClient: HttpClient) {
   }
 
-  getTodos(filters?: { status?: boolean; owner?: string; body?: string; category?: string }): Observable<Todo[]> {
+  getTodos(filters?: { category?: TodoCategory; status?: boolean }): Observable<Todo[]> {
 
     let httpParams: HttpParams = new HttpParams();
     if (filters) {
-      if (filters.status) {
-        httpParams = httpParams.set(this.statusKey, filters.status);
-      }
-      if (filters.owner) {
-        httpParams = httpParams.set(this.ownerKey, filters.owner);
-      }
-      if (filters.body) {
-        httpParams = httpParams.set(this.bodyKey, filters.body);
-      }
+
       if (filters.category) {
         httpParams = httpParams.set(this.categoryKey, filters.category);
+      }
+      if (filters.status) {
+        httpParams = httpParams.set(this.statusKey, filters.status ? "complete" : "incomplete");
       }
     }
 
@@ -44,12 +40,19 @@ export class TodoService {
   }
 
 
-  filterTodos(todos: Todo[], filters: { status?: boolean }): Todo[] { // skipcq: JS-0105
+  filterTodos(todos: Todo[], filters: { owner?: string, body?: string }): Todo[] {
     let filteredTodos = todos;
 
-    // Filter by status
-    if (filters.status) {
-      filteredTodos = filteredTodos.filter(todo => todo.status == filters.status);
+    // Filter by owner
+    if (filters.owner) {
+      filters.owner = filters.owner.toLowerCase();
+      filteredTodos = filteredTodos.filter(todo => todo.owner.toLowerCase().indexOf(filters.owner) !== -1);
+    }
+
+    // Filter by body
+    if (filters.body) {
+      filters.body = filters.body.toLowerCase();
+      filteredTodos = filteredTodos.filter(todo => todo.body.toLowerCase().indexOf(filters.body) !== -1);
     }
 
     return filteredTodos;
