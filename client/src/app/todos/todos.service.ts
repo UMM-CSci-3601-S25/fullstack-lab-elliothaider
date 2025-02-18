@@ -14,8 +14,6 @@ export class TodoService {
   readonly todoUrl: string = `${environment.apiUrl}todos`;
 
   private readonly statusKey = 'status';
-  private readonly ownerKey = 'owner';
-  private readonly bodyKey = 'contains';
   private readonly categoryKey = 'category';
 
   constructor(private httpClient: HttpClient) {
@@ -30,7 +28,7 @@ export class TodoService {
         httpParams = httpParams.set(this.categoryKey, filters.category);
       }
       if (filters.status) {
-        httpParams = httpParams.set(this.statusKey, filters.status ? "complete" : "incomplete");
+        httpParams = httpParams.set(this.statusKey, filters.status);
       }
     }
 
