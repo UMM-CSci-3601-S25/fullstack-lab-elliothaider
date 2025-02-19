@@ -56,4 +56,9 @@ export class TodoService {
     return filteredTodos;
   }
 
+  getTodoById(id: string): Observable<Todo> {
+    // The input to get could also be written as (this.userUrl + '/' + id)
+    return this.httpClient.get<Todo>(`${this.todoUrl}/${id}`);
+  }
+
 }
