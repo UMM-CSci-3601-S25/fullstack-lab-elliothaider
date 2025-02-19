@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Todo } from './todo';
 import { TodoCategory } from './todo';
+import { map } from 'rxjs/operators';
 
 
 @Injectable({
@@ -59,6 +60,10 @@ export class TodoService {
   getTodoById(id: string): Observable<Todo> {
     // The input to get could also be written as (this.userUrl + '/' + id)
     return this.httpClient.get<Todo>(`${this.todoUrl}/${id}`);
+  }
+
+  addTodo(newTodo: Partial<Todo>): Observable<string> {
+    return this.httpClient.post<{id: string}>(this.todoUrl, newTodo).pipe(map(response => response.id));
   }
 
 }
