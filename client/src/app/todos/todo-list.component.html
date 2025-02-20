@@ -1,4 +1,4 @@
-<div class="flex-row">
+<div class="flex-row" matRipple>
     <div class="flex-1">
 
       <mat-card class="search-card">
@@ -42,7 +42,7 @@
               <mat-label>Category</mat-label>
               <mat-select [(ngModel)]="todoCategory" data-test="todoCategorySelect">
                 <mat-option>--</mat-option>
-                <mat-option value="video games">Video Games</mat-option>
+                <mat-option value="video games">Video matRipple [matRippleUnbounded]="true" [matRippleCentered]="true" [matRippleRadius]=100 Games</mat-option>
                 <mat-option value="groceries">Groceries</mat-option>
                 <mat-option value="software design">Software Design</mat-option>
                 <mat-option value="homework">Homework</mat-option>
