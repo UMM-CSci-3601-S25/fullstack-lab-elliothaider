@@ -12,7 +12,10 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,12 +35,16 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import static com.mongodb.client.model.Filters.eq;
 
 import io.javalin.Javalin;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
+import io.javalin.json.JavalinJackson;
+import io.javalin.validation.BodyValidator;
+import io.javalin.validation.ValidationException;
 
 /**
  * Tests the logic of the TodoController
@@ -68,6 +75,8 @@ class TodoControllerSpec {
   // for all the tests in this spec file.
   private static MongoClient mongoClient;
   private static MongoDatabase db;
+  private static JavalinJackson javalinJackson = new JavalinJackson();
+
 
   @Mock
   private Context ctx;
@@ -384,5 +393,34 @@ class TodoControllerSpec {
       assertEquals("Barry", todo.owner);
       assertEquals(false, todo.status);
     }
+  }
+
+  @Test
+  void canCreateNewTodo() throws IOException {
+    Todo newTodo = new Todo();
+    newTodo.status = false;
+    newTodo.owner = "Ba";
+    newTodo.category = "video games";
+    newTodo.body = "Ipsum";
+
+    String newTodoJson = javalinJackson.toJsonString(newTodo, Todo.class);
+
+    when(ctx.bodyValidator(Todo.class))
+      .thenReturn(new BodyValidator<Todo>(newTodoJson, Todo.class,
+                    () -> javalinJackson.fromJsonString(newTodoJson, Todo.class)));
+
+    todoController.addNewTodo(ctx);
+    verify(ctx).json(mapCaptor.capture());
+
+    verify(ctx).status(HttpStatus.CREATED);
+
+    Document addedTodo = db.getCollection("todos")
+        .find(eq("_id", new ObjectId(mapCaptor.getValue().get("id")))).first();
+
+    assertNotEquals("", addedTodo.get("_id"));
+    assertEquals(newTodo.owner, addedTodo.get(TodoController.OWNER_KEY));
+    assertEquals(newTodo.status, addedTodo.get(TodoController.STATUS_KEY));
+    assertEquals(newTodo.category, addedTodo.get(TodoController.CATEGORY_KEY));
+    assertEquals(newTodo.body, addedTodo.get("body"));
   }
 }

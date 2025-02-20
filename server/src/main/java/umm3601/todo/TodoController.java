@@ -194,13 +194,7 @@ public class TodoController implements Controller {
   }
 
   public void addNewTodo(Context ctx) {
-    String body = ctx.body();
-    Todo newTodo = ctx.bodyValidator(Todo.class)
-      .check(usr -> usr.owner != null && usr.owner.length() > 0,
-        "Todo must have a non-empty owner; body was " + body)
-      .check(usr -> usr.category != null && usr.category.length() > 0,
-        "Todo must have a non-empty category; body was " + body)
-      .get();
+    Todo newTodo = ctx.bodyValidator(Todo.class).get();
 
     // Add the new todo to the database
     todoCollection.insertOne(newTodo);
