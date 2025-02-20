@@ -10,12 +10,12 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router, RouterModule } from '@angular/router';
 import { of, throwError } from 'rxjs';
-import { MockTodoService } from 'src/testing/todo.service.mock';
 import { AddTodoComponent } from './add-todo.component';
 import { TodoProfileComponent } from './todo-profile.component';
 import { TodoService } from './todos.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { Todo } from './todo';
+import { MockTodoService } from 'src/testing/todo.service.mock';
 
 describe('AddTodoComponent', () => {
   let addTodoComponent: AddTodoComponent;
