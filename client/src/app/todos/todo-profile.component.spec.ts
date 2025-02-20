@@ -1,13 +1,13 @@
-/*import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { throwError } from 'rxjs';
 import { ActivatedRouteStub } from '../../testing/activated-route-stub';
-import { MockTodoService } from '../../testing/todos.service.mock';
 import { Todo } from './todo';
 import { TodoCardComponent } from './todo-card.component';
 import { TodoProfileComponent } from './todo-profile.component';
 import { TodoService } from './todos.service';
+import { MockTodoService } from 'src/testing/todo.service.mock';
 
 describe('TodoProfileComponent', () => {
   let component: TodoProfileComponent;
@@ -91,4 +91,3 @@ describe('TodoProfileComponent', () => {
     expect(getTodoSpy).toHaveBeenCalledWith(chrisId);
   });
 });
-*/

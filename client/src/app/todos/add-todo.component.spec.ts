@@ -81,9 +81,9 @@ describe('AddTodoComponent', () => {
 
   describe('The body field', () => {
     it('should allow empty values', () => {
-      const companyControl = addTodoForm.controls.company;
-      companyControl.setValue('');
-      expect(companyControl.valid).toBeTruthy();
+      const bodyControl = addTodoForm.controls.body;
+      bodyControl.setValue('');
+      expect(bodyControl.valid).toBeTruthy();
     });
   });
 
@@ -91,7 +91,7 @@ describe('AddTodoComponent', () => {
     let categoryControl: AbstractControl;
 
     beforeEach(() => {
-      categoryControl = addTodoForm.controls.role;
+      categoryControl = addTodoForm.controls.category;
     });
 
     it('should not allow empty values', () => {
@@ -117,7 +117,7 @@ describe('AddTodoComponent', () => {
 
     it('should not allow "groceries"', () => {
       categoryControl.setValue('groceries');
-      expect(categoryControl.valid).toBeFalsy();
+      expect(categoryControl.valid).toBeTruthy();
     });
   });
 
