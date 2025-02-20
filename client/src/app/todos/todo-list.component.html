@@ -69,10 +69,17 @@
             <mat-form-field class="input-field">
               <mat-label>Limit</mat-label>
               <input matInput data-test="todoLimitInput" type="number" placeholder="Limit number of todos"
-                min="0" max="200" [(ngModel)]="todoLimit">
+                min="1" max="200" [(ngModel)]="todoLimit">
               <mat-hint>Filtered on server</mat-hint>
             </mat-form-field>
           </div>
+
+          <mat-slider
+              class="example-margin"
+              [max]=50
+              [min]=1>
+            <input matSliderThumb [(ngModel)]="todoLimit" #slider>
+          </mat-slider>
 
           <br>
             <div class="flex-row gap-8 flex-wrap">

@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
 import {MatRippleModule} from '@angular/material/core';
+import {MatSliderModule} from '@angular/material/slider';
 import { catchError, combineLatest, of, switchMap, tap } from 'rxjs';
 import { Todo, TodoCategory } from './todo';
 import { TodoCardComponent } from './todo-card.component';
@@ -49,6 +50,7 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
     MatTooltipModule,
     MatIconModule,
     MatRippleModule,
+    MatSliderModule,
   ],
 })
 export class TodoListComponent {
