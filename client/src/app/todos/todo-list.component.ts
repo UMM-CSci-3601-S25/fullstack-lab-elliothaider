@@ -54,6 +54,8 @@ export class TodoListComponent {
   todoStatus = signal<boolean | undefined>(undefined);
   todoCategory = signal<TodoCategory | undefined>(undefined);
   todoBody = signal<string | undefined>(undefined);
+  todoSort = signal<string | undefined>(undefined);
+  todoLimit = signal<string | undefined>(undefined);
 
   viewType = signal<'card' | 'list'>('card');
 
@@ -66,6 +68,8 @@ export class TodoListComponent {
 
   private todoCategory$ = toObservable(this.todoCategory);
   private todoStatus$ = toObservable(this.todoStatus);
+  private todoSort$ = toObservable(this.todoSort);
+  private todoLimit$ = toObservable(this.todoLimit);
 
   // We ultimately `toSignal` this to be able to access it synchronously, but we do all the RXJS operations
   // "inside" the `toSignal()` call processing and transforming the observables there.
@@ -76,14 +80,16 @@ export class TodoListComponent {
     // the corresponding `userRole$` and/or `userAge$` observables to change, which will cause `combineLatest()`
     // to send a new pair down the pipe.
     toSignal(
-      combineLatest([this.todoCategory$, this.todoStatus$]).pipe(
+      combineLatest([this.todoCategory$, this.todoStatus$, this.todoSort$, this.todoLimit$]).pipe(
         // `switchMap` maps from one observable to another. In this case, we're taking `role` and `age` and passing
         // them as arguments to `userService.getUsers()`, which then returns a new observable that contains the
         // results.
-        switchMap(([category, status]) =>
+        switchMap(([category, status, sort, limit]) =>
           this.todoService.getTodos({
             category,
             status,
+            sort,
+            limit,
           })
         ),
 

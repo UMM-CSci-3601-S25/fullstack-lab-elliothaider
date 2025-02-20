@@ -16,11 +16,13 @@ export class TodoService {
 
   private readonly statusKey = 'status';
   private readonly categoryKey = 'category';
+  private readonly sortKey = 'orderBy';
+  private readonly limitKey = 'limit';
 
   constructor(private httpClient: HttpClient) {
   }
 
-  getTodos(filters?: { category?: TodoCategory; status?: boolean }): Observable<Todo[]> {
+  getTodos(filters?: { category?: TodoCategory; status?: boolean; sort?: string; limit?: string }): Observable<Todo[]> {
 
     let httpParams: HttpParams = new HttpParams();
     if (filters) {
@@ -30,6 +32,12 @@ export class TodoService {
       }
       if (filters.status) {
         httpParams = httpParams.set(this.statusKey, filters.status);
+      }
+      if (filters.sort) {
+        httpParams = httpParams.set(this.sortKey, filters.sort);
+      }
+      if (filters.limit) {
+        httpParams = httpParams.set(this.limitKey, filters.limit);
       }
     }
 
