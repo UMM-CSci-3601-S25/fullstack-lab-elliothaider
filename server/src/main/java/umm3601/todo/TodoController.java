@@ -2,6 +2,7 @@ package umm3601.todo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -188,5 +189,23 @@ public class TodoController implements Controller {
 
     // List todos, filtered using query parameters
     server.get(API_TODOS, this::getTodos);
+
+    server.post(API_TODOS, this::addNewTodo);
+  }
+
+  public void addNewTodo(Context ctx) {
+    String body = ctx.body();
+    Todo newTodo = ctx.bodyValidator(Todo.class)
+      .check(usr -> usr.owner != null && usr.owner.length() > 0,
+        "Todo must have a non-empty owner; body was " + body)
+      .check(usr -> usr.category != null && usr.category.length() > 0,
+        "Todo must have a non-empty category; body was " + body)
+      .get();
+
+    // Add the new todo to the database
+    todoCollection.insertOne(newTodo);
+
+    ctx.json(Map.of("id", newTodo._id));
+    ctx.status(HttpStatus.CREATED);
   }
 }

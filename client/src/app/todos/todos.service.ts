@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Todo } from './todo';
 import { TodoCategory } from './todo';
+import { map } from 'rxjs/operators';
 
 
 @Injectable({
@@ -15,11 +16,13 @@ export class TodoService {
 
   private readonly statusKey = 'status';
   private readonly categoryKey = 'category';
+  private readonly sortKey = 'orderBy';
+  private readonly limitKey = 'limit';
 
   constructor(private httpClient: HttpClient) {
   }
 
-  getTodos(filters?: { category?: TodoCategory; status?: boolean }): Observable<Todo[]> {
+  getTodos(filters?: { category?: TodoCategory; status?: boolean; sort?: string; limit?: string }): Observable<Todo[]> {
 
     let httpParams: HttpParams = new HttpParams();
     if (filters) {
@@ -29,6 +32,12 @@ export class TodoService {
       }
       if (filters.status) {
         httpParams = httpParams.set(this.statusKey, filters.status);
+      }
+      if (filters.sort) {
+        httpParams = httpParams.set(this.sortKey, filters.sort);
+      }
+      if (filters.limit) {
+        httpParams = httpParams.set(this.limitKey, filters.limit);
       }
     }
 
@@ -54,6 +63,15 @@ export class TodoService {
     }
 
     return filteredTodos;
+  }
+
+  getTodoById(id: string): Observable<Todo> {
+    // The input to get could also be written as (this.userUrl + '/' + id)
+    return this.httpClient.get<Todo>(`${this.todoUrl}/${id}`);
+  }
+
+  addTodo(newTodo: Partial<Todo>): Observable<string> {
+    return this.httpClient.post<{id: string}>(this.todoUrl, newTodo).pipe(map(response => response.id));
   }
 
 }
